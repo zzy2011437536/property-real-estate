@@ -1,10 +1,10 @@
 import React from "react";
 import {BrowserRouter, Route,Routes} from "react-router-dom";
 import HomePage from "../pages/Home";
-import LoginPage from "../pages/Login";
-import DemoPage from "../pages/Login/demo";
-import RegisterPage from "../pages/Register";
-import UserPage from "../pages/User";
+import LoginRegisterPage from "../pages/LoginRegister";
+import NotFoundPage from "../pages/NotFound";
+import ProfilePage from "../pages/Profile";
+import MemberPage from "../pages/Member";
 import MainLayout from './../layout/index'
 
 function RoutesPage() {
@@ -13,9 +13,11 @@ function RoutesPage() {
                 <MainLayout>
                     <Routes>
                     <Route path='/' element={<HomePage />}></Route>
-                    <Route path='/login' element={<DemoPage />}></Route>
-                    <Route path='/register' element={< RegisterPage/>}></Route>
-                    <Route path='/user' element={< UserPage/>}></Route>
+                    <Route path='/loginRegister' element={<LoginRegisterPage />}></Route>
+                    <Route path='/member' element={< MemberPage/>}></Route>
+                    <Route path='/profile' element={< ProfilePage/>}></Route>
+                    <Route path='/noauth' element={< ProfilePage/>}></Route>
+                    <Route path='*' element={< NotFoundPage/>}></Route>
                     </Routes>
                 </MainLayout>
         </BrowserRouter>
