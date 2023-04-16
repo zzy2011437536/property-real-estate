@@ -1,5 +1,7 @@
 import axios from 'axios'
 import urlConstants from '../constants/urls';
+import { getLocalStorage } from './storage';
+
 export interface ResData{
     code:number,
     message:string;
@@ -8,7 +10,10 @@ export interface ResData{
 const request = axios.create({
     baseURL: urlConstants.baseURL,
     timeout: 3000,
-    // headers:''
+    headers: {
+        'Content-Type': 'application/json',
+        'ticket':getLocalStorage('userToken')
+    }
 })
 
 request.interceptors.response.use((res: { data: any; }) => res.data, (err: { config: any; }) => {

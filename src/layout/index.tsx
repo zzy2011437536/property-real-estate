@@ -4,7 +4,7 @@ import { AccountBookOutlined, CarOutlined, EnvironmentOutlined, FileDoneOutlined
 import { message, Modal } from 'antd';
 import { Layout, Menu, theme, } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { getRole } from "../services/member";
+import { getUserInfo, Member } from "../services/member";
 import { getLocalStorage, removeLocalStorage } from '../tools/storage';
 const { SubMenu } = Menu;
 interface mainLayoutProps {
@@ -19,11 +19,14 @@ const { Content, Sider } = Layout;
 
 
 function MainLayout(props: mainLayoutProps) {
+
   const navigate = useNavigate();
+
   const location = useLocation()
-  const [role, changeRole] = useState<1 | 2 | 3|4>(1)
+  const [personalInfo, setPersonalInfo] = useState<Member>({} as Member);
   const [visible, setVisible] = useState(false);
-  
+  const [ticket, changeTicket] = useState('')
+
   const showModal = () => {
     setVisible(true);
   };
@@ -32,20 +35,21 @@ function MainLayout(props: mainLayoutProps) {
   };
   const { children } = props
   const init = async () => {
-  if(location.pathname!=='/loginRegister') {
+    if (location.pathname !== '/loginRegister') {
       const ticket = getLocalStorage('userToken')
       if (!ticket) {
         navigate('/loginRegister')
       } else {
-        const data = await getRole(ticket)
-        changeRole(data.data.role)
+        changeTicket(ticket)
+        const data = await getUserInfo()
+        setPersonalInfo(data.data)
       }
     }
   };
 
   useEffect(() => {
     init()
-  }, [])
+  }, [ticket])
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -57,6 +61,7 @@ function MainLayout(props: mainLayoutProps) {
   }, [])
   useEffect(() => {
     onRouteChange()
+    init()
     return () => onRouteChange()
   }, [location])
 
@@ -74,7 +79,7 @@ function MainLayout(props: mainLayoutProps) {
         }}>{children}</Content>
       </Layout>
     )
-  } 
+  }
 
   const CustomModal: React.FC<Props> = ({ onConfirm }) => {
     const handleOk = () => {
@@ -83,11 +88,11 @@ function MainLayout(props: mainLayoutProps) {
       message.success('操作成功')
       navigate('/loginRegister')
     };
-  
+
     const handleCancel = () => {
       setVisible(false);
     };
-  
+
     return (
       <div>
         <Modal
@@ -112,27 +117,33 @@ function MainLayout(props: mainLayoutProps) {
           <Menu
             mode="inline"
             defaultSelectedKeys={['/']}
+            selectedKeys={[`${location.pathname}`]}
             style={{ height: '100%' }}
           >
 
-            <Menu.Item icon={<HomeOutlined />} key='/' onClick={handleClick} style={{height:'60px'}}>万和嘉园物业系统</Menu.Item>
-            <SubMenu title="个人信息" icon={<UserOutlined/>} >
-        <Menu.Item icon={<UserOutlined/>} key='/profile'  onClick={handleClick}>个人主页</Menu.Item>
-        <Menu.Item icon={<LogoutOutlined/>} onClick={showModal} >退出登录</Menu.Item>
-      </SubMenu>
-            <Menu.Item icon={<UserOutlined />} key='/member' style={{ display: role!==4?'none':'',height:'60px'}} onClick={handleClick} >成员管理</Menu.Item>
-            <Menu.Item icon={<HomeOutlined />} key='/room' onClick={handleClick} style={{height:'60px'}}>房产资料管理</Menu.Item >
-            <Menu.Item icon={<ToolOutlined />} key='/tool' onClick={handleClick} style={{height:'60px'}}>室内维修管理</Menu.Item >
-            <Menu.Item icon={<EnvironmentOutlined />} key='/env' onClick={handleClick} style={{height:'60px'}}>保洁清理管理</Menu.Item >
-            <Menu.Item icon={<CarOutlined />} key='/car' style={{height:'60px'}}>车位收费管理</Menu.Item>
-            <Menu.Item icon={<StarOutlined />} key='/car' style={{height:'60px'}}>评价信息管理</Menu.Item>
-            <Menu.Item icon={<FileDoneOutlined />} key='/car' style={{height:'60px'}}>工单管理</Menu.Item>
-            <Menu.Item icon={<AccountBookOutlined />} key='/car' style={{height:'60px'}}>财务管理</Menu.Item>
-            
-            <Menu.Item icon={<NotificationOutlined />} key='/car' style={{height:'60px'}}>公告管理</Menu.Item>
+            <Menu.Item icon={<HomeOutlined />} key='/' onClick={handleClick} >万和嘉园物业系统</Menu.Item>
+            <SubMenu title="个人信息" icon={<UserOutlined />} >
+              <Menu.Item icon={<UserOutlined />} key={`/profile/${personalInfo.ticket}`} onClick={handleClick}>个人主页</Menu.Item>
+              <Menu.Item icon={<LogoutOutlined />} onClick={showModal} >退出登录</Menu.Item>
+            </SubMenu>
+            {personalInfo.role === 4 ? <Menu.Item icon={<UserOutlined />} key='/member'  onClick={handleClick} >成员管理</Menu.Item> : null}
+            <Menu.Item icon={<HomeOutlined />} key='/room' onClick={handleClick} >房产资料管理</Menu.Item >
+            <SubMenu title="室内维修管理" icon={<ToolOutlined />}>
+              <Menu.Item icon={<ToolOutlined />} key={`/tool/create`} onClick={handleClick} >维修申请</Menu.Item>
+              <Menu.Item icon={<FileDoneOutlined />} key={`/tool/list`} onClick={handleClick} >维修工单管理</Menu.Item>
+            </SubMenu>
+            <SubMenu title="保洁清理管理" icon={<EnvironmentOutlined />} >
+              <Menu.Item icon={<EnvironmentOutlined />} key={`/env/create`} onClick={handleClick}>清理申请</Menu.Item>
+              <Menu.Item icon={<FileDoneOutlined />} key={`/env/list`} onClick={handleClick} >保洁工单管理</Menu.Item>
+            </SubMenu>
+            <Menu.Item icon={<CarOutlined />} key='/parkingCharge' onClick={handleClick} >车位收费管理</Menu.Item>
+            <Menu.Item icon={<StarOutlined />} key='/evaluation' onClick={handleClick} >评价信息管理</Menu.Item>
+            <Menu.Item icon={<FileDoneOutlined />} key='/bill' onClick={handleClick} >工单管理</Menu.Item>
+            <Menu.Item icon={<AccountBookOutlined />} key='/finance' onClick={handleClick} >财务管理</Menu.Item>
+            <Menu.Item icon={<NotificationOutlined />} key='/notice' onClick={handleClick} >公告管理</Menu.Item>
           </Menu>
         </Sider>
-        <CustomModal onConfirm={()=>{removeLocalStorage('userToken')}}/>
+        <CustomModal onConfirm={() => { removeLocalStorage('userToken'); changeTicket(''); navigate('/') }} />
         <Layout >
           <Content style={{
             padding: 24,

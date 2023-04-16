@@ -8,6 +8,7 @@ import { doLogin, doRegister } from '../../services/loginRegister/index'
 import ErrorModal from '../../components/errorModal';
 import SuccessModal from '../../components/successModal';
 import { setLocalStorage ,getLocalStorage} from '../../tools/storage';
+import { ruleList } from '../../services/member';
 function LoginRegisterPage() {
     const [formForLogin] = Form.useForm();
     const [formForRegister] = Form.useForm();
@@ -27,12 +28,7 @@ function LoginRegisterPage() {
         setSuccess(null);
         navigate("/")
     };
-    const ruleList = [
-        { label: '业主', value: 1 },
-        { label: '保洁人员', value: 2 },
-        { label: '维修人员', value: 3 },
-        { label: '管理员', value: 4 },
-    ];
+
 
     const phoneValidator = (_: any, value: any) => {
         if (!value) {
@@ -43,12 +39,7 @@ function LoginRegisterPage() {
         return Promise.resolve();
     };
     const handleRegister = async (values: any) => {
-        // setLoading(true);
-        // 执行注册逻辑
-        // ...
-        // console.log(123123, values);
         const data = await doRegister(values)
-        console.log(123123,data);
         if (data.code !== 200) {
             setError(data.message)
         } else {
@@ -57,7 +48,6 @@ function LoginRegisterPage() {
     };
     const handleLogin = async (values: any) => {
         const data = await doLogin(values)
-        console.log(123123,data);
         if (data.code !== 200) {
             setError(data.message)
         } else {
@@ -68,7 +58,6 @@ function LoginRegisterPage() {
     };
 
     const onChangeRule = ({ target: { value } }: RadioChangeEvent) => {
-        console.log('radio2 checked', value);
         setRule(value);
     };
     return (

@@ -1,6 +1,6 @@
 import { Result, Button } from 'antd';
 
-function NotFoundPage() {
+function NoAuthPage() {
   return (
     <Result
       status="403"
@@ -11,4 +11,4 @@ function NotFoundPage() {
   );
 }
 
-export default NotFoundPage;
+export default NoAuthPage;
