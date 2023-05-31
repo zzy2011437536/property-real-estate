@@ -133,7 +133,7 @@ function MainLayout(props: mainLayoutProps) {
             {personalInfo.role === 1 ? <Menu.Item icon={<AccountBookOutlined />} key={`/profile/room/${personalInfo.id}`} onClick={handleClick} >物业缴费管理</Menu.Item> : null}
             <SubMenu title="物业报修管理" icon={<ToolOutlined />}>
               {personalInfo.role === 1 ? <Menu.Item icon={<ToolOutlined />} key={`/tool/create`} onClick={handleClick} >室内维修申请</Menu.Item> : null}
-              {personalInfo.role === 1 ? <Menu.Item icon={<ToolOutlined />} key={`/tool/create/ga`} onClick={handleClick} >公共区域报修</Menu.Item> : null}
+              {personalInfo.role === 1 ? <Menu.Item icon={<ToolOutlined />} key={`/tool/createPublic`} onClick={handleClick} >公共区域报修</Menu.Item> : null}
               <Menu.Item icon={<FileDoneOutlined />} key={`/tool/list`} onClick={handleClick} >维修工单管理</Menu.Item>
             </SubMenu>
             {personalInfo.role === 4 ? <Menu.Item icon={<CarOutlined />} key='/parking' onClick={handleClick} >车位信息管理</Menu.Item> : null}

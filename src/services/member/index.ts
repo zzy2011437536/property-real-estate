@@ -78,3 +78,7 @@ export  const saveUserInfo = async (req:any):Promise<ResData> => {
 export const changeUserStatus = async(req:any):Promise<ResData>=>{
     return request.post('/user/changeUserStatus',req)
 }
+
+export const updateVip = async():Promise<ResData>=>{
+    return request.post('/user/updateVip')
+}

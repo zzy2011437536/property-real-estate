@@ -18,6 +18,7 @@ import VipPage from "../pages/Profile/vip";
 import ScheduleTablePage from "../pages/ScheduleTable";
 import ParkingPage from "../pages/Parking";
 import ComplaintPage from "../pages/Complaint";
+import ToolPublicPage from "../pages/Tool/toolPublic";
 
 function RoutesPage() {
     return (
@@ -33,6 +34,7 @@ function RoutesPage() {
                     <Route path='/room' element={< RoomPage/>}></Route>
                     <Route path='/room/:id/user' element={< RoomUserPage/>}></Route>
                     <Route path='/tool/create' element={< ToolPage/>}></Route>
+                    <Route path='/tool/createPublic' element={< ToolPublicPage/>}></Route>
                     <Route path='/tool/list' element={< ToolListPage/>}></Route>
                     <Route path='/parking' element={< ParkingPage/>}></Route>
                     <Route path='/bill' element={< BillPage/>}></Route>

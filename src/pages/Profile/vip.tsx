@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Form, Input, Button, message, Card, Radio, Modal, Select,Tooltip ,Popover} from "antd";
 import { EyeInvisibleOutlined, EyeOutlined, EyeTwoTone ,QuestionCircleOutlined,InfoCircleOutlined} from "@ant-design/icons";
-import { ButtonMap, ChangeStatusMap, changeUserStatus, getUserInfo, Member, RoleMap, ruleList, saveUserInfo, StatusMap } from "../../services/member";
+import { ButtonMap, ChangeStatusMap, changeUserStatus, getUserInfo, Member, RoleMap, ruleList, saveUserInfo, StatusMap, updateVip } from "../../services/member";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getLocalStorage } from "../../tools/storage";
 interface Props {
@@ -26,9 +26,16 @@ const VipPage = () => {
                 ...data.data,
                 roomList
             })
-
-            
         }
+    }
+    const updateVipLevel = async ()=>{
+        const data = await updateVip()
+        if(data.code!==200){
+            message.error('升级失败')
+        }else{
+            message.success('升级成功')
+        }
+        await init()
     }
     useEffect(() => {
         
@@ -79,7 +86,7 @@ const VipPage = () => {
                                 </Tooltip>
                               }/>
                                 {vipLevelGap === 0 && (
-                                    <Button onClick={() => setIsEditingPassword(true)}>升级</Button>
+                                    <Button onClick={updateVipLevel}>升级</Button>
                                 )}
                             </>
                         )}
