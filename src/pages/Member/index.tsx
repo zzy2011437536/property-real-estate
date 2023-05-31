@@ -92,7 +92,7 @@ const MemberManagement: React.FC = () => {
                     <Form.Item name="role" label="角色" style={{marginLeft:50}}>
                         <Select placeholder="请选择角色"  allowClear={true}>
                             <Option value={1}>业主</Option>
-                            <Option value={2}>保洁人员</Option>
+                            <Option value={2}>安保人员</Option>
                             <Option value={3}>维修人员</Option>
                             <Option value={4}>管理员</Option>
                         </Select>
@@ -103,7 +103,6 @@ const MemberManagement: React.FC = () => {
                         </Button>
                     </Form.Item>
                 </Form>
-
             </Card>
             <Card size="small" title="成员列表" style={{ width: '100%', marginTop: '20px' }}>
                 <Table columns={columns} dataSource={filteredMembers}/>

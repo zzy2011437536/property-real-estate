@@ -1,13 +1,21 @@
 import request, { ResData } from "../../tools/request";
 
 export enum EnvType {
-    local = 1, //局部
-    whole = 2, //整体
-  }
+  HouseholdCleaning = 1, //家庭清洁服务
+  CookingService = 2, //烹饪服务
+  HomeMaintenanceService = 3, //家居维护服务
+  PurchasingService = 4, //代购服务
+  BabysittingService = 5, //保姆服务
+  PetCareService = 6, //宠物照顾服务
+}
 
   export const EnvTypeMap = {
-    [EnvType.local]: '局部保洁',
-    [EnvType.whole]: '全局保洁',
+    [EnvType.HouseholdCleaning]: '家庭清洁服务',
+    [EnvType.CookingService]: '烹饪服务',
+    [EnvType.HomeMaintenanceService]: '家居维护服务',
+    [EnvType.PurchasingService]: '代购服务',
+    [EnvType.BabysittingService]: '保姆服务',
+    [EnvType.PetCareService]: '宠物照顾服务',
   };
 
 export const createEnv = async(data:any):Promise<ResData>=>{

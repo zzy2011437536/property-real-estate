@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Form, Input, Space, Table, Select, message } from "antd";
+import { Button, Card, Form, Input, Space, Table, Select, message, Modal } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { getLocalStorage } from "../../tools/storage";
 import { useNavigate } from "react-router-dom";
@@ -16,14 +16,13 @@ const RoomPage: React.FC = () => {
         { title: "房间号", dataIndex: "name", align: 'center' },
         { title: "占地面积", dataIndex: "area", align: 'center' },
         { title: "每平米售价", dataIndex: "salePrice", align: 'center' },
-        { title: "房屋描述", dataIndex: "description", align: 'center' },
         { title: "状态", dataIndex: "newStatus", align: 'center' },
+        { title: "物业费缴费状态", dataIndex: "paymentStatus", align: 'center' },
         { title: "创建时间", dataIndex: "createdAt", align: 'center' },
         {
             title: "操作",
             render: (room: Room) => (
                 <Space size='large'>
-    
                     <Button onClick={() => window.open(`/room/${room.id}/user`)}>住户管理</Button>
                 </Space>
     
@@ -34,6 +33,9 @@ const RoomPage: React.FC = () => {
     const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false);
+    const showModal = () => {
+        setVisible(true);
+    };
     const navigate = useNavigate();
     const [role, changeRole] = useState(1)
     const init = async () => {
@@ -51,21 +53,18 @@ const RoomPage: React.FC = () => {
     if (role !== 4) {
         navigate('/noauth')
     }
-
-    const handleOpenModal = () => {
-        setVisible(true);
-      };
     
       const handleCloseModal = () => {
         setVisible(false);
       };
     const handleSearch = async (e: any) => {
         const { data } = await getRoomList(e)
+        console.log(123123456,data);
         const rooms = data.map((item: any) => {
             return {
                 ...item,
                 newStatus: RoomStatus[item.status as 0|1],
-                description:item.description||'-'
+                paymentStatus:item.paymentStatus===0?'未缴费':'已缴费'
             }
         })
         setFilteredRooms(rooms)
@@ -109,7 +108,6 @@ const RoomPage: React.FC = () => {
             <Card size="small" title="成员列表" style={{ width: '100%', marginTop: '20px' }}>
                 <Table columns={columns} dataSource={filteredRooms}/>
             </Card>
-
         </div>
     );
 };

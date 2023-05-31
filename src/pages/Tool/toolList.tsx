@@ -4,7 +4,7 @@ import { ColumnProps } from "antd/lib/table";
 import { ButtonMap, getUserInfo, getUserList, Member, RoleMap, StatusMap } from "../../services/member";
 import { getLocalStorage } from "../../tools/storage";
 import { useNavigate } from "react-router-dom";
-import { ToolType, ToolTypeMap, changeRate, getList } from "../../services/tool";
+import { ToolType, ToolTypeMap, changeRate, getList, saveRate } from "../../services/tool";
 // import { Member } from "./types";
 const { Option } = Select;
 
@@ -19,6 +19,10 @@ const ToolListPage: React.FC = () => {
     const [visible, setVisible] = useState(false);
     const [id, setId] = useState(0)
     const navigate = useNavigate();
+    const [bindUserModalVisible, setBindUserModalVisible] = useState(false); // 控制绑定用户弹窗的显示与隐藏
+    const [form1] = Form.useForm();
+    const [selectedRowId, setSelectedRowId] = useState<number>(0); // 存储选中行的 ID
+    const [rateInfo,setRateInfo] = useState({} as any)
     const init = async () => {
         const data = await getList()
         const userInfo = await getUserInfo()
@@ -31,7 +35,7 @@ const ToolListPage: React.FC = () => {
                     userName: item.user.userName,
                     contactInformation: item.user.contactInformation,
                     roomName: `${item.room.zone}-${item.room.name}`,
-                    type: ToolTypeMap[item.type as 1 | 2 | 3],
+                    type: ToolTypeMap[item.type as 1 | 2 | 3 | 4 | 5 | 6],
                     tollGatherer: item.tollGatherer.userName,
                     tollGathererContactInformation: item.tollGatherer.contactInformation
                 }
@@ -53,13 +57,17 @@ const ToolListPage: React.FC = () => {
         { title: "维修工人联系方式", dataIndex: "tollGathererContactInformation", align: 'center' },
         { title: "房间", dataIndex: "roomName", align: 'center' },
         { title: "维修类型", dataIndex: "type", align: 'center' },
+        { title: "描述", dataIndex: "description", align: 'center' },
         { title: "金额", dataIndex: "amount", align: 'center' },
         { title: "维修时间", dataIndex: "createdAt", align: 'center' },
         {
-            title: "评分",
+            title: "评价",
             render: (item: any) => (
                 <Space size='large'>
-                    <Rate key={item.id} defaultValue={item.evaluation} disabled={item.evaluation > 0 ||role!==1|| disabledIndexes.includes(item.id)} onChange={(e) => { setId(item.id); setRating(e); showModal() }} />
+                    
+                    <Button type="primary" onClick={() => showBindUserModal(item)}>评价</Button>
+                    
+                    {/* <Rate key={item.id} defaultValue={item.evaluation} disabled={item.evaluation > 0 || role !== 1 || disabledIndexes.includes(item.id)} onChange={(e) => { setId(item.id); setRating(e); showModal() }} /> */}
                 </Space>
             ),
             align: 'center'
@@ -92,6 +100,20 @@ const ToolListPage: React.FC = () => {
             </div>
         );
     };
+    const getRateInfoByToolId = async () => {
+        if(selectedRowId){
+            const rateInfo = toolList.filter((item:any)=>item.id===selectedRowId)
+            setRateInfo(rateInfo[0])
+        }
+    }
+
+    useEffect(() => {      
+        getRateInfoByToolId();
+      }, [selectedRowId]);
+
+      useEffect(() => {
+        form1.setFieldsValue(rateInfo);
+      }, [rateInfo]);
     const createToolMethod = async () => {
         const data = await changeRate({
             id,
@@ -101,12 +123,69 @@ const ToolListPage: React.FC = () => {
         setId(0)
         setRating(0)
     }
+    const handleCancel = () => {
+        // 关闭绑定用户弹窗
+        setBindUserModalVisible(false);
+    };
+    const showBindUserModal = async (tool: any) => {
+        // 设置选中行的 ID
+        setSelectedRowId(tool.id);
+        const rateInfoList = toolList.filter((item:any)=>item.id===tool.id)
+        setRateInfo(rateInfoList[0])
+        console.log(1234567890,rateInfo)
+        // 打开绑定用户弹窗，并进行相关处理
+        // await getUserInfoByParkingId()
+        setBindUserModalVisible(true);
+        // 其他处理逻辑，例如根据 parking 进行数据准备等
+    };
+    const handleBindUser = async () => {
+        const formData = form1.getFieldsValue();
+        console.log('data123123',formData);
+        const data = await saveRate({
+            id:selectedRowId,
+            ...formData
+        })
+        if(data.code!==200){
+            message.error('评价失败')
+        }
+        message.success('评价成功')
+        // 关闭绑定用户弹窗
+        setRateInfo({
+            evaluation:0,
+            content:''
+        })
+        setBindUserModalVisible(false);
+    };
     return (
         <div>
             <Card size="small" title="维修工单列表" style={{ width: '100%', marginTop: '20px' }}>
                 <Table columns={columns} dataSource={toolList} />
             </Card>
             <CustomModal onConfirm={createToolMethod}></CustomModal>
+            {/* 绑定用户弹窗 */}
+            <Modal
+                visible={bindUserModalVisible}
+                title="评分"
+                onCancel={handleCancel}
+                footer={[
+                    <Button key="cancel" onClick={handleCancel}>
+                        取消
+                    </Button>,
+                    <Button key="bind" type="primary" onClick={handleBindUser}>
+                        绑定
+                    </Button>
+                ]}
+            >
+                <Form form={form1}>
+                    <Form.Item label='评分' name="evaluation">
+                    <Rate  defaultValue={rateInfo.evaluation}  /> 
+                    </Form.Item>
+                    <Form.Item label='评价' name="content">
+                    <Input value={rateInfo.content} placeholder="请输入评价"/> 
+                    </Form.Item>
+
+                </Form>
+            </Modal>
         </div>
     );
 };

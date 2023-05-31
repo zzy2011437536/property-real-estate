@@ -43,7 +43,7 @@ ChangeStatusMap.set(2, -2)
 
 export const ruleList = [
     { label: '业主', value: 1 },
-    { label: '保洁人员', value: 2 },
+    { label: '安保人员', value: 2 },
     { label: '维修人员', value: 3 },
     { label: '管理员', value: 4 },
 ];
@@ -59,6 +59,7 @@ export interface Member {
     ticket:string;
     rooms?:any
     roomList?:string[]
+    vipLevel:string;
 }
 
 //获取用户详情

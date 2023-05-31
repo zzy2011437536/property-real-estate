@@ -11,8 +11,13 @@ import RoomPage from "../pages/Room";
 import RoomUserPage from "../pages/Room/roomUser";
 import ToolPage from "../pages/Tool";
 import ToolListPage from "../pages/Tool/toolList";
-import EnvPage from "../pages/Env";
 import EnvListPage from "../pages/Env/toolList";
+import BillPage from "../pages/Bill";
+import ProfileRoomPage from "../pages/Profile/room";
+import VipPage from "../pages/Profile/vip";
+import ScheduleTablePage from "../pages/ScheduleTable";
+import ParkingPage from "../pages/Parking";
+import ComplaintPage from "../pages/Complaint";
 
 function RoutesPage() {
     return (
@@ -23,12 +28,16 @@ function RoutesPage() {
                     <Route path='/loginRegister' element={<LoginRegisterPage />}></Route>
                     <Route path='/member' element={< MemberPage/>}></Route>
                     <Route path='/profile/:id' element={< ProfilePage/>}></Route>
+                    <Route path='/profileVip' element={< VipPage/>}></Route>
+                    <Route path='/profile/room/:id' element={< ProfileRoomPage/>}></Route>
                     <Route path='/room' element={< RoomPage/>}></Route>
                     <Route path='/room/:id/user' element={< RoomUserPage/>}></Route>
                     <Route path='/tool/create' element={< ToolPage/>}></Route>
                     <Route path='/tool/list' element={< ToolListPage/>}></Route>
-                    <Route path='/env/create' element={< EnvPage/>}></Route>
-                    <Route path='/env/list' element={< EnvListPage/>}></Route>
+                    <Route path='/parking' element={< ParkingPage/>}></Route>
+                    <Route path='/bill' element={< BillPage/>}></Route>
+                    <Route path='/complaint' element={< ComplaintPage/>}></Route>
+                    <Route path='/scheduleTable' element={< ScheduleTablePage/>}></Route>
                     <Route path='/noauth' element={< NoAuthPage/>}></Route>
                     <Route path='*' element={< NotFoundPage/>}></Route>
                     </Routes>

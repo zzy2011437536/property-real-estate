@@ -1,0 +1,24 @@
+.person ul {
+    padding-left: 0;
+  }
+  
+  .person li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .person .bullet {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  
+  .main-person .bullet {
+    background-color: #faad14;
+  }
+  
+  .secondary-person .bullet {
+    background-color: #52c41a;
+  }

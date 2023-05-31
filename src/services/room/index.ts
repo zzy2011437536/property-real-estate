@@ -14,10 +14,15 @@ export interface Room {
     description: string;
     salePrice: number;
     createdAt: string;
+    paymentStatus:0|1|string
 }
 
 export const getRoomList = async(data:any):Promise<ResData>=>{
     return request.post('/room/getRoomList',data)
+}
+
+export const getRoomListBySelf = async():Promise<ResData>=>{
+    return request.post('/room/getRoomListBySelf')
 }
 
 export const getRoomInfo = async(data:any):Promise<ResData>=>{
@@ -34,4 +39,8 @@ export const addUserInRoom = async(data:any):Promise<ResData>=>{
 
 export const delUserInRoom = async(data:any):Promise<ResData>=>{
     return request.post('/room/delUserInRoom',data)
+}
+
+export const changePaymentStatus = async(data:any):Promise<ResData>=>{
+    return request.post('/room/changePaymentStatus',data)
 }

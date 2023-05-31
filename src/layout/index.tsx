@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom'
-import { AccountBookOutlined, CarOutlined, EnvironmentOutlined, FileDoneOutlined, HomeOutlined, LaptopOutlined, LogoutOutlined, MenuOutlined, NotificationOutlined, StarOutlined, ToolOutlined, UserOutlined } from '@ant-design/icons';
+import { AccountBookOutlined, CarOutlined, EnvironmentOutlined, FileDoneOutlined, HomeOutlined, ScheduleOutlined,LaptopOutlined, CrownOutlined,LogoutOutlined, MenuOutlined, NotificationOutlined, StarOutlined, ToolOutlined, UserOutlined } from '@ant-design/icons';
 import { message, Modal } from 'antd';
 import { Layout, Menu, theme, } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getUserInfo, Member } from "../services/member";
 import { getLocalStorage, removeLocalStorage } from '../tools/storage';
+import { Footer } from "antd/es/layout/layout";
 const { SubMenu } = Menu;
 interface mainLayoutProps {
   children: React.ReactNode
@@ -124,23 +125,22 @@ function MainLayout(props: mainLayoutProps) {
             <Menu.Item icon={<HomeOutlined />} key='/' onClick={handleClick} >万和嘉园物业系统</Menu.Item>
             <SubMenu title="个人信息" icon={<UserOutlined />} >
               <Menu.Item icon={<UserOutlined />} key={`/profile/${personalInfo.ticket}`} onClick={handleClick}>个人主页</Menu.Item>
+              <Menu.Item icon={<CrownOutlined />} key='/profileVip' onClick={handleClick} >会员中心</Menu.Item>
               <Menu.Item icon={<LogoutOutlined />} onClick={showModal} >退出登录</Menu.Item>
             </SubMenu>
-            {personalInfo.role === 4 ? <Menu.Item icon={<UserOutlined />} key='/member'  onClick={handleClick} >成员管理</Menu.Item> : null}
-            <Menu.Item icon={<HomeOutlined />} key='/room' onClick={handleClick} >房产资料管理</Menu.Item >
-            <SubMenu title="室内维修管理" icon={<ToolOutlined />}>
-              <Menu.Item icon={<ToolOutlined />} key={`/tool/create`} onClick={handleClick} >维修申请</Menu.Item>
+            {personalInfo.role === 4 ? <Menu.Item icon={<UserOutlined />} key='/member' onClick={handleClick} >成员管理</Menu.Item> : null}
+            {personalInfo.role === 4 ? <Menu.Item icon={<HomeOutlined />} key='/room' onClick={handleClick} >房屋资产管理</Menu.Item> : null}
+            {personalInfo.role === 1 ? <Menu.Item icon={<AccountBookOutlined />} key={`/profile/room/${personalInfo.id}`} onClick={handleClick} >物业缴费管理</Menu.Item> : null}
+            <SubMenu title="物业报修管理" icon={<ToolOutlined />}>
+              {personalInfo.role === 1 ? <Menu.Item icon={<ToolOutlined />} key={`/tool/create`} onClick={handleClick} >室内维修申请</Menu.Item> : null}
+              {personalInfo.role === 1 ? <Menu.Item icon={<ToolOutlined />} key={`/tool/create/ga`} onClick={handleClick} >公共区域报修</Menu.Item> : null}
               <Menu.Item icon={<FileDoneOutlined />} key={`/tool/list`} onClick={handleClick} >维修工单管理</Menu.Item>
             </SubMenu>
-            <SubMenu title="保洁清理管理" icon={<EnvironmentOutlined />} >
-              <Menu.Item icon={<EnvironmentOutlined />} key={`/env/create`} onClick={handleClick}>清理申请</Menu.Item>
-              <Menu.Item icon={<FileDoneOutlined />} key={`/env/list`} onClick={handleClick} >保洁工单管理</Menu.Item>
-            </SubMenu>
-            <Menu.Item icon={<CarOutlined />} key='/parkingCharge' onClick={handleClick} >车位收费管理</Menu.Item>
-            <Menu.Item icon={<StarOutlined />} key='/evaluation' onClick={handleClick} >评价信息管理</Menu.Item>
-            <Menu.Item icon={<FileDoneOutlined />} key='/bill' onClick={handleClick} >工单管理</Menu.Item>
-            <Menu.Item icon={<AccountBookOutlined />} key='/finance' onClick={handleClick} >财务管理</Menu.Item>
-            <Menu.Item icon={<NotificationOutlined />} key='/notice' onClick={handleClick} >公告管理</Menu.Item>
+            {personalInfo.role === 4 ? <Menu.Item icon={<CarOutlined />} key='/parking' onClick={handleClick} >车位信息管理</Menu.Item> : null}
+            <Menu.Item icon={<NotificationOutlined />} key='/complaint' onClick={handleClick} >投诉管理</Menu.Item>
+            {personalInfo.role === 4 ? <Menu.Item icon={<ScheduleOutlined />} key='/scheduleTable' onClick={handleClick} >安保管理</Menu.Item> : null}
+            
+
           </Menu>
         </Sider>
         <CustomModal onConfirm={() => { removeLocalStorage('userToken'); changeTicket(''); navigate('/') }} />
@@ -152,7 +152,7 @@ function MainLayout(props: mainLayoutProps) {
             background: colorBgContainer,
             //   height:'100%'
           }}>{children}</Content>
-          {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer> */}
+          <Footer style={{ textAlign: 'center' }}>万和嘉园物业系统 ©2023 Created by zhuzhiyuan</Footer>
         </Layout>
       </Layout>
     </Layout>

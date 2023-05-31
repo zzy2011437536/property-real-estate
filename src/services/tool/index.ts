@@ -1,15 +1,21 @@
 import request, { ResData } from "../../tools/request";
 
 export enum ToolType {
-    hydropower = 1, //水电维修
-    householdAppliance = 2, //家电维修
-    indoor = 3, //室内维修
-  }
-  export const ToolTypeMap = {
-    [ToolType.hydropower]: '水电维修',
-    [ToolType.householdAppliance]: '家电维修',
-    [ToolType.indoor]: '室内维修',
-  };
+  ElectricalMaintenance = 1, //电器维修
+  PipelineMaintenance = 2, //管道维修
+  WoodworkingMaintenance = 3, //木工维修
+  PaintRepair = 4, //油漆维修
+  FurnitureMaintenance = 5, //家具维修
+  LightingMaintenance = 6, //灯具维修
+}
+export const ToolTypeMap = {
+  [ToolType.ElectricalMaintenance]: '电器维修',
+  [ToolType.PipelineMaintenance]: '管道维修',
+  [ToolType.WoodworkingMaintenance]: '木工维修',
+  [ToolType.PaintRepair]: '油漆维修',
+  [ToolType.FurnitureMaintenance]: '家具维修',
+  [ToolType.LightingMaintenance]: '灯具维修',
+};
 
 export const createTool = async(data:any):Promise<ResData>=>{
     return request.post('/tool/create',data)
@@ -21,4 +27,8 @@ export const getList = async():Promise<ResData>=>{
 
 export const changeRate = async(data:any):Promise<ResData>=>{
     return request.post('/tool/changeRate',data)
+}
+
+export const saveRate = async(data:any):Promise<ResData>=>{
+  return request.post('/tool/saveRate',data)
 }
