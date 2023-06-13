@@ -12,7 +12,9 @@ const { Option } = Select;
 
 
 const ProfileRoomPage: React.FC = () => {
+    
     const columns: ColumnProps<Room>[] = [
+        { title: "物业缴费单号", dataIndex: "propertyBillingNumber", align: 'center' },
         { title: "区", dataIndex: "zone", align: 'center' },
         { title: "房间号", dataIndex: "name", align: 'center' },
         { title: "占地面积", dataIndex: "area", align: 'center' },

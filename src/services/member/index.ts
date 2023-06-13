@@ -60,6 +60,7 @@ export interface Member {
     rooms?:any
     roomList?:string[]
     vipLevel:string;
+    subscriberNumber:string;
 }
 
 //获取用户详情

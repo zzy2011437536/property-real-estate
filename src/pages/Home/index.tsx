@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
         // 配置图表选项和数据
         const topRightOptions: echarts.EChartsOption = {
             title: {
-                text: '各区房屋平均售价',
+                text: '各区房屋售出状态',
             },
             tooltip: {},
             xAxis: {
@@ -76,9 +76,9 @@ const HomePage: React.FC = () => {
                 {
                     type: 'pie',
                     data: [
-                        { name: 'V1', value: 120 },
-                        { name: 'V2', value: 200 },
-                        { name: 'V3', value: 150 },
+                        { name: 'V1', value: 25 },
+                        { name: 'V2', value: 20 },
+                        { name: 'V3', value: 10 },
                     ],
                 },
             ],
@@ -95,18 +95,36 @@ const HomePage: React.FC = () => {
             },
             yAxis: {},
             legend: {
-                data:['图列1','图列2']
+                bottom: 0,
+                data:['weixiu1','weixiu2','weixiu3','weixiu4','weixiu5']
               },
             series: [
                 {
-                    name:'图列1',
-                    data: [10, 22, 28, 43, 49],
+                    name:'weixiu1',
+                    data: [4.5, 5, 4, 5, 4.5],
                     type: 'line',
 
                 },
                 {
-                    name:'图列2',
-                    data: [5, 4, 3, 5, 10],
+                    name:'weixiu2',
+                    data: [5, 4, 3, 5, 4],
+                    type: 'line',
+                },
+                {
+                    name:'weixiu3',
+                    data: [4, 4.5, 5, 5, 4],
+                    type: 'line',
+                    
+                },
+                {
+                    name:'weixiu4',
+                    data: [4.5, 4, 3, 5, 4],
+                    type: 'line',
+                    
+                },
+                {
+                    name:'weixiu5',
+                    data: [5, 3, 4, 3.5, 4],
                     type: 'line',
                     
                 }

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Form, Input, Space, Table, Select, message, Rate, Modal } from "antd";
+import { Button, Card, Form, Input, Space, Table, Select, message, Rate, Modal, Radio } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { ButtonMap, getUserInfo, getUserList, Member, RoleMap, StatusMap } from "../../services/member";
 import { getLocalStorage } from "../../tools/storage";
 import { useNavigate } from "react-router-dom";
-import { ToolType, ToolTypeMap, changeRate, getList, saveRate } from "../../services/tool";
+import { ToolType, ToolTypeMap, changeRate, changeState, getList, saveRate } from "../../services/tool";
 // import { Member } from "./types";
 const { Option } = Select;
 
@@ -42,6 +42,7 @@ const ToolListPage: React.FC = () => {
             })
             setToolList(toolList)
             setRole(userInfo.data.role)
+            console.log(11111111,role)
         }
     };
     useEffect(() => {
@@ -51,6 +52,7 @@ const ToolListPage: React.FC = () => {
         setVisible(true);
     };
     const columns: ColumnProps<Member>[] = [
+        { title: "工单单号", dataIndex: "billNumber", align: 'center' },
         { title: "业主用户名", dataIndex: "userName", align: 'center' },
         { title: "业主联系方式", dataIndex: "contactInformation", align: 'center' },
         { title: "维修工人用户名", dataIndex: "tollGatherer", align: 'center' },
@@ -60,6 +62,34 @@ const ToolListPage: React.FC = () => {
         { title: "描述", dataIndex: "description", align: 'center' },
         { title: "金额", dataIndex: "amount", align: 'center' },
         { title: "维修时间", dataIndex: "createdAt", align: 'center' },
+        {
+            title: "完成状态",
+            render: (item: any) => (
+                <Space size='large'>
+                    
+                    <Radio.Group value={item.state} disabled={role!==(3||4)} onChange = {(e)=>{
+                            const updateStatus = async () => {
+                                try {
+                                  await changeState({
+                                    id:+item.id,
+                                    state: e.target.value
+                                  }); // 假设updateToolStatus为更新工单状态的异步函数
+                                  message.success('状态更新成功');
+                                  init(); // 重新获取工单列表数据
+                                } catch (error) {
+                                  message.error('状态更新失败');
+                                }
+                              };
+                          
+                              updateStatus();
+                    }}>
+      <Radio value={0}>未完成</Radio>
+      <Radio value={1}>已完成</Radio>
+    </Radio.Group>
+                </Space>
+            ),
+            align: 'center'
+        },
         {
             title: "评价",
             render: (item: any) => (
@@ -156,8 +186,65 @@ const ToolListPage: React.FC = () => {
         })
         setBindUserModalVisible(false);
     };
+    const handleSearch = (e: any) => {
+        if(!e.userName&&!e.tollGatherer&&!e.state&&!e.billNumber){
+            init()
+        }else{
+            const newToolList = toolList.filter((item: any) => {
+                let isMatched = true;
+            
+                if (e.userName) {
+                  isMatched = isMatched && item.userName.includes(e.userName);
+                }
+                if (e.tollGatherer) {
+                  isMatched = isMatched && item.tollGatherer.includes(e.tollGatherer);
+                }
+                if (e.state) {
+                  isMatched = isMatched && item.state === e.state;
+                }
+                if (e.billNumber) {
+                    isMatched = isMatched && item.billNumber === e.billNumber;
+                  }
+            
+                return isMatched;
+              });
+            
+              setToolList(newToolList);
+        }
+
+      }
     return (
         <div>
+                        <Card size="small" title="筛选项" style={{ width: '100%' }}>
+                <Form onFinish={handleSearch} layout="inline" >
+                <Form.Item name='billNumber' label="工单编号" >
+                        <Input
+                            placeholder="请输入工单编号"
+                        />
+                    </Form.Item>
+                    <Form.Item name='userName' label="业主用户名" >
+                        <Input
+                            placeholder="请输入业主用户名"
+                        />
+                    </Form.Item>
+                    <Form.Item name='tollGatherer' label="维修人员用户名" >
+                        <Input
+                            placeholder="请输入维修人员用户名"
+                        />
+                    </Form.Item>
+                    <Form.Item name="state" label="状态" style={{marginLeft:30}}>
+                        <Select placeholder="请选择状态" allowClear={true}>
+                            <Option value={0}>未完成</Option>
+                            <Option value={1}>已完成</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item style={{marginLeft:30}}>
+                        <Button type="primary" htmlType="submit">
+                            查询
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
             <Card size="small" title="维修工单列表" style={{ width: '100%', marginTop: '20px' }}>
                 <Table columns={columns} dataSource={toolList} />
             </Card>

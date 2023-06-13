@@ -13,6 +13,7 @@ const handleBan = (e: any) => {
 }
 
 const columns: ColumnProps<Member>[] = [
+    { title: "用户编号", dataIndex: "subscriberNumber", align: 'center' },
     { title: "用户名", dataIndex: "userName", align: 'center' },
     { title: "联系方式", dataIndex: "contactInformation", align: 'center' },
     { title: "角色", dataIndex: "role", align: 'center' },

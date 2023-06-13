@@ -32,3 +32,7 @@ export const changeRate = async(data:any):Promise<ResData>=>{
 export const saveRate = async(data:any):Promise<ResData>=>{
   return request.post('/tool/saveRate',data)
 }
+
+export const changeState = async(data:any):Promise<ResData>=>{
+  return request.post('/tool/changeState',data)
+}

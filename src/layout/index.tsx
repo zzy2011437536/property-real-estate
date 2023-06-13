@@ -137,8 +137,8 @@ function MainLayout(props: mainLayoutProps) {
               <Menu.Item icon={<FileDoneOutlined />} key={`/tool/list`} onClick={handleClick} >维修工单管理</Menu.Item>
             </SubMenu>
             {personalInfo.role === 4 ? <Menu.Item icon={<CarOutlined />} key='/parking' onClick={handleClick} >车位信息管理</Menu.Item> : null}
-            <Menu.Item icon={<NotificationOutlined />} key='/complaint' onClick={handleClick} >投诉管理</Menu.Item>
-            {personalInfo.role === 4 ? <Menu.Item icon={<ScheduleOutlined />} key='/scheduleTable' onClick={handleClick} >安保管理</Menu.Item> : null}
+            {personalInfo.role === 1||personalInfo.role===4 ? <Menu.Item icon={<NotificationOutlined />} key={`complaint`} onClick={handleClick} >投诉管理</Menu.Item> : null}
+            {personalInfo.role === 4||personalInfo.role===2 ? <Menu.Item icon={<ScheduleOutlined />} key='/scheduleTable' onClick={handleClick} >安保管理</Menu.Item> : null}
             
 
           </Menu>
